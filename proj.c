@@ -434,3 +434,22 @@ void bucket_sort(long int *arr, unsigned int size) {
     free(buckets);
 
 }
+
+void reset_arr(long int *arr, long int *arr_copy, unsigned int size) {
+
+    for (int i = 0; i < size; i++)
+        arr[i] = arr_copy[i];
+
+}
+
+void clear_screen() {
+    //this only clears the terminal screen
+    
+    #ifdef _WIN32
+        //if the program is ran on Windows, the "cls" command is used
+        system("cls");  
+    #else 
+        //else, it uses "clear" for Linux systems
+        system("clear");  
+    #endif
+}
