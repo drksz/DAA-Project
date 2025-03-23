@@ -4,7 +4,7 @@
 
 
 void rand_seq(long int *arr, unsigned int size, unsigned long int MAX_RANGE);
-void increasing_seq(long int *arr, unsigned int size, int start_val);
+void increasing_seq(long int *arr, unsigned int size, long int start_val);
 void print_arr(long int *arr, unsigned int size);
 void selection_sort(long int *arr, unsigned int size);
 void insertion_sort(long int *arr, unsigned int size);
@@ -20,31 +20,141 @@ long int get_max(long int *arr, unsigned int size);
 void counting_sort(long int *arr, unsigned int size);
 void radix_sort(long int *arr, unsigned int size);
 void bucket_sort(long int *arr, unsigned int size);
-
+void reset_arr(long int *arr, long int *arr_copy, unsigned int size);
+void clear_screen();
 
 int main()
 {
     clock_t start, end;
-    double cpu_time_used;
+    double sel_sort_cpu_time_used;
+    double ins_sort_cpu_time_used;
+    double bub_sort_cpu_time_used;
+    double mer_sort_cpu_time_used;
+    double qsort_cpu_time_used;
+    double heap_sort_cpu_time_used;
+    double count_sort_cpu_time_used;
+    double radix_sort_cpu_time_used;
+    double bucket_sort_cpu_time_used;
+
     
     unsigned long int MAX_RANGE;    // ONLY HOLDS A MAX OF 4,294,967,295
                                     // use format specifier '%lu' for unsigned long int
     unsigned int size;
-    int start_val;
+    int choice;
+    long int start_val;
 
-
-    printf("Enter max range : ");
-    scanf("%lu", &MAX_RANGE);
-    printf("Enter size of arr : ");
+    printf("Enter input size : ");
     scanf("%u", &size);
-    printf("Enter starting value : ");
-    scanf("%d", &start_val);
-    //be sure to initialize 'size' before reaching the statement(s) below
-    long int arr[size];
+    clear_screen();
 
-    //rand_seq(arr, size, MAX_RANGE);
-    increasing_seq(arr, size, start_val);
+    long int arr[size];
+    long int arr_copy[size];
+
+    printf("DATA GENERATION METHOD");
+    printf("\n1. Randomly Generated Integers\n2. Increasing Sequence\n\nSelect a generation method : ");
+    getchar();
+    scanf("%d", &choice);
+    clear_screen();
+
+    if (choice == 1) {
+        printf("Enter maximum possible integer value to be generated ( [0, MAX] ) : ");
+        getchar();
+        scanf("%lu", &MAX_RANGE);
+        
+        rand_seq(arr, size, MAX_RANGE);
+    }
+    else if (choice == 2) {
+        printf("Enter input sequence starting value : ");
+        scanf("%ld", &start_val);
+
+        increasing_seq(arr, size, start_val);
+    }
+    else {
+        printf("Invalid choice. Exiting program.\n");
+        return 1;
+    }
+
+    for (int i = 0 ; i < size; i++)
+        arr_copy[i] = arr[i];
+
+    clear_screen();
+    printf("Array successfully generated.\nInput sequence is : \n\n");
     print_arr(arr, size);
+    printf("\n\nPress any key to start sorting process...");
+    getchar();
+    getchar();
+    
+    clear_screen();
+    printf("Sorting in progress...\n");
+
+    start = clock();
+    selection_sort(arr, size);
+    end = clock();
+    sel_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+
+    start = clock();
+    insertion_sort(arr, size);
+    end = clock();
+    ins_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+
+    start = clock();
+    bubble_sort(arr, size);
+    end = clock();
+    bub_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+    
+
+    start = clock();
+    merge_sort(arr, 0, size - 1, size);
+    end = clock();
+    mer_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+
+    start = clock();
+    quick_sort(arr, 0, size - 1, size);
+    end = clock();
+    qsort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+
+    start = clock();
+    heap_sort(arr, size);
+    end = clock();
+    heap_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+
+    start = clock();
+    counting_sort(arr, size);
+    end = clock();
+    count_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+
+    start = clock();
+    radix_sort(arr, size);
+    end = clock();
+    radix_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    reset_arr(arr, arr_copy, size);
+
+    start = clock();
+    bucket_sort(arr, size);
+    end = clock();
+    bucket_sort_cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+    /*printf("Sorting complete.\nSorted sequence is : \n\n");
+    print_arr(arr, size);*/
+
+    printf("Sorting Complete.\n\n");
+    printf("Selection Sort Time : %.3f s\n", sel_sort_cpu_time_used);
+    printf("Insertion Sort Time : %.3f s\n", ins_sort_cpu_time_used);
+    printf("Bubble Sort Time : %.3f s\n", bub_sort_cpu_time_used);
+    printf("Merge Sort Time : %.3f s\n", mer_sort_cpu_time_used);
+    printf("Quick Sort Time : %.3f s\n", qsort_cpu_time_used);
+    printf("Heap Sort Time : %.3f s\n", heap_sort_cpu_time_used);
+    printf("Counting Sort Time : %.3f s\n", count_sort_cpu_time_used);
+    printf("Radix Sort Time : %.3f s\n", radix_sort_cpu_time_used);
+    printf("Bucket Sort Time : %.3f s\n", bucket_sort_cpu_time_used);
+    printf("\n\n");
                    
     return 0;
 
@@ -57,7 +167,7 @@ void rand_seq(long int *arr, unsigned int size, unsigned long int MAX_RANGE) {
 
 }
 
-void increasing_seq(long int *arr, unsigned int size, int start_val) {
+void increasing_seq(long int *arr, unsigned int size, long int start_val) {
 
     int i;
 
@@ -107,9 +217,10 @@ void selection_sort(long int *arr, unsigned int size) {
 
 void insertion_sort(long int *arr, unsigned int size) {
 
-    int i, key;
+    int i;
+    long int key;
 
-    for (i = 1; i < size - 1; i++) {
+    for (i = 1; i < size; i++) {
 
         key = arr[i];
         int j = i - 1;
@@ -170,7 +281,7 @@ void merge_sort(long int *arr, int start, int end, unsigned int size) {
 
     if (start < end) {
         merge_sort(arr, start, (start + end)/2, size);
-        merge_sort(arr, start, (start + end)/2, size);
+        merge_sort(arr, (start + end)/2 +  1, end, size);
         merge(arr, start, (start + end)/2, (start + end)/2 + 1, end, size);
     }
 
@@ -198,7 +309,7 @@ int hoare_partition(long int *arr, int start, int end) {
         } while (arr[j] > pivot);
 
         if (i >= j)
-            return;
+            return j;
 
         swap(&arr[i], &arr[j]);
     }
@@ -321,4 +432,23 @@ void bucket_sort(long int *arr, unsigned int size) {
     
     free(buckets);
 
+}
+
+void reset_arr(long int *arr, long int *arr_copy, unsigned int size) {
+
+    for (int i = 0; i < size; i++)
+        arr[i] = arr_copy[i];
+
+}
+
+void clear_screen() {
+    //this only clears the terminal screen
+    
+    #ifdef _WIN32
+        //if the program is ran on Windows, the "cls" command is used
+        system("cls");  
+    #else 
+        //else, it uses "clear" for Linux systems
+        system("clear");  
+    #endif
 }
