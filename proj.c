@@ -60,7 +60,8 @@ void rand_seq(long int *arr, unsigned int size, unsigned long int MAX_RANGE) {
 void increasing_seq(long int *arr, unsigned int size, int start_val) {
 
     int i;
-
+    //loop-unrolling here
+    //WAG NYONG GALAWIN MAANGAS TOH
     for (i = 0; i + 4 < size; i+=5) {
         arr[i] = start_val++;
         arr[i+1] = start_val++;
