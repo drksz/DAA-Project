@@ -170,7 +170,8 @@ void rand_seq(long int *arr, unsigned int size, unsigned long int MAX_RANGE) {
 void increasing_seq(long int *arr, unsigned int size, long int start_val) {
 
     int i;
-
+    //loop-unrolling here
+    //WAG NYONG GALAWIN MAANGAS TOH
     for (i = 0; i + 4 < size; i+=5) {
         arr[i] = start_val++;
         arr[i+1] = start_val++;
@@ -432,23 +433,4 @@ void bucket_sort(long int *arr, unsigned int size) {
     
     free(buckets);
 
-}
-
-void reset_arr(long int *arr, long int *arr_copy, unsigned int size) {
-
-    for (int i = 0; i < size; i++)
-        arr[i] = arr_copy[i];
-
-}
-
-void clear_screen() {
-    //this only clears the terminal screen
-    
-    #ifdef _WIN32
-        //if the program is ran on Windows, the "cls" command is used
-        system("cls");  
-    #else 
-        //else, it uses "clear" for Linux systems
-        system("clear");  
-    #endif
 }
